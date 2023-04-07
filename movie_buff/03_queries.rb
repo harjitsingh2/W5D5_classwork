@@ -20,9 +20,20 @@ def golden_age
         .first["decade"]
 end
 
-def costars(name)
+def costars(target_name)
   # List the names of the actors that the named actor has ever appeared with.
   # Hint: use a subquery
+  movie_ids_with_person = Movie.joins(:actors)
+  .where("actors.name = ?", target_name)
+  .pluck("movies.id")
+
+  Movie
+  .joins(:actors)
+  .where("movies.id IN (?) AND actors.name != ?", movie_ids_with_person, target_name)
+  .select("DISTINCT actors.name")
+  .pluck("actors.name")
+
+
 
 end
 
